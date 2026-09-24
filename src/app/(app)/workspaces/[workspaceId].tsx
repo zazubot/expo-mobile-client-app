@@ -3,6 +3,7 @@ import type { ListRenderItem } from 'react-native';
 
 import { BotRow } from '@/components/BotRow';
 import { QueryList } from '@/components/QueryList';
+import { WorkspaceHeaderActions } from '@/components/WorkspaceHeaderActions';
 import { useBots } from '@/hooks/useBots';
 import { keyById } from '@/lib/list';
 
@@ -12,9 +13,13 @@ export default function BotsScreen() {
   const { workspaceId, name } = useLocalSearchParams<{ workspaceId: string; name?: string }>();
   const query = useBots(workspaceId);
 
+  const renderHeaderRight = () => (
+    <WorkspaceHeaderActions workspaceId={workspaceId} name={name} />
+  );
+
   return (
     <>
-      <Stack.Screen options={{ title: name || 'Bots' }} />
+      <Stack.Screen options={{ title: name || 'Bots', headerRight: renderHeaderRight }} />
       <QueryList
         data={query.data}
         isPending={query.isPending}

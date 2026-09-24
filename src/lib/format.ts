@@ -69,3 +69,37 @@ export function initials(name: string): string {
   const last = parts.length > 1 ? parts[parts.length - 1]?.charAt(0) ?? '' : '';
   return (first + last).toUpperCase();
 }
+
+const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
+
+/** "Sep 24, 2026" from an ISO string. Falls back to the raw string. */
+export function formatDate(iso: string): string {
+  const date = parseDate(iso);
+  return date ? dateFormatter.format(date) : iso;
+}
+
+/**
+ * Formats an epoch timestamp as a date. Accepts seconds (Stripe convention)
+ * or milliseconds; values above 1e12 are treated as milliseconds.
+ */
+export function formatEpochDate(epoch: number | null | undefined): string {
+  if (epoch === null || epoch === undefined || !Number.isFinite(epoch)) return '—';
+  const ms = epoch > 1e12 ? epoch : epoch * 1000;
+  return dateFormatter.format(new Date(ms));
+}
+
+/**
+ * Formats a money amount given in the currency's minor unit (cents), which is
+ * how billing providers report invoice totals. Zero-decimal currencies (JPY,
+ * KRW, …) are handled via the currency's own fraction digits.
+ */
+export function formatCurrency(amountMinor: number, currency: string): string {
+  const code = currency.toUpperCase();
+  try {
+    const formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency: code });
+    const digits = formatter.resolvedOptions().maximumFractionDigits ?? 2;
+    return formatter.format(amountMinor / 10 ** digits);
+  } catch {
+    return `${(amountMinor / 100).toFixed(2)} ${code}`;
+  }
+}

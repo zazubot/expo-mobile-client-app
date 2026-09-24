@@ -6,6 +6,7 @@ export {
   setOnUnauthorized,
   type RequestOptions,
 } from '@/api/client';
+export { getCurrentUsage, getInvoiceList } from '@/api/account';
 export { getBotList } from '@/api/bots';
 export {
   getResultsList,

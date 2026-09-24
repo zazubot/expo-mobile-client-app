@@ -22,6 +22,7 @@ export default function AppLayout() {
       }}>
       <Stack.Screen name="index" options={{ title: 'Workspaces' }} />
       <Stack.Screen name="workspaces/[workspaceId]" options={{ title: 'Bots' }} />
+      <Stack.Screen name="workspaces/[workspaceId]/account" options={{ title: 'Account' }} />
       <Stack.Screen name="bots/[botId]/results" options={{ title: 'Results' }} />
     </Stack>
   );

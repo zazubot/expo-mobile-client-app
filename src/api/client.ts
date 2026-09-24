@@ -125,7 +125,10 @@ function toApiError(error: unknown): ApiError {
     const status = error.response?.status;
     if (status !== undefined) {
       const server = readServerError(error.response?.data);
-      const useServerMessage = status !== 401 && status !== 403 && server.message;
+      // Server messages are only shown for client errors other than auth; 401/403
+      // get a consistent wording and 5xx messages are internal details.
+      const useServerMessage =
+        status !== 401 && status !== 403 && status < 500 && server.message !== undefined;
       return new ApiError({
         status,
         code: server.code ?? error.code,

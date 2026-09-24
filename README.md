@@ -50,6 +50,7 @@ src/
     (auth)/token.tsx       # token entry (sign in)
     (app)/index.tsx        # Workspaces
     (app)/workspaces/[workspaceId].tsx   # Bots in a workspace
+    (app)/workspaces/[workspaceId]/account.tsx  # Usage + invoices for a workspace
     (app)/bots/[botId]/results.tsx       # Results + stats for a bot
   api/                     # axios client + one module per endpoint
   hooks/                   # React Query hooks and theme hooks
