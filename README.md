@@ -1,56 +1,61 @@
-# Welcome to your Expo app 👋
+# Zazubot
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Mobile companion for Zazubot. Paste an API token once, then browse your workspaces, the bots inside each workspace, and the results (conversations) of any bot. Built with Expo, Expo Router, React Query and axios.
 
-## Get started
+## Requirements
 
-1. Install dependencies
+- Node 20+ and [pnpm](https://pnpm.io)
+- Expo Go on a device, or an iOS Simulator / Android emulator
+
+## Setup
+
+1. Install dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. Start the app
+2. Configure the API base URL. Copy `.env.example` to `.env` and set:
+
+   ```bash
+   EXPO_PUBLIC_API_URL=https://your-zazubot-host/api/v1
+   ```
+
+3. Start the dev server:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Environment variables are inlined at bundle time. After changing `.env`, restart with `npx expo start --clear`.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Signing in
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Create an API token in Zazubot under **Settings & Members › My account › API tokens**, then paste it on the token screen. The token is validated against the API before it is saved, and it is stored encrypted with `expo-secure-store` (iOS Keychain / Android Keystore). Sign out from any screen header to remove it.
 
-## Get a fresh project
-
-When you're ready, run:
+## Scripts
 
 ```bash
-npm run reset-project
+pnpm start        # expo start
+pnpm typecheck    # tsc --noEmit
+pnpm lint         # expo lint
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Project layout
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+src/
+  app/                     # Expo Router routes
+    _layout.tsx            # providers + auth gate (Stack.Protected)
+    (auth)/token.tsx       # token entry (sign in)
+    (app)/index.tsx        # Workspaces
+    (app)/workspaces/[workspaceId].tsx   # Bots in a workspace
+    (app)/bots/[botId]/results.tsx       # Results + stats for a bot
+  api/                     # axios client + one module per endpoint
+  hooks/                   # React Query hooks and theme hooks
+  context/AuthContext.tsx  # token state, signIn, signOut
+  components/              # shared UI
+  lib/                     # storage, formatting, query client
+  constants/               # config and design tokens
+  types/                   # API types (source of truth)
+```

@@ -1,9 +1,9 @@
 interface Bot {
-  name: "<string>";
-  icon: "<string>";
-  id: "<string>";
+  name: string;
+  icon: string;
+  id: string;
   accessRight: "read";
-  publishedTypebotId: "<string>";
+  publishedTypebotId: string;
 }
 
 interface BotListResponse {
